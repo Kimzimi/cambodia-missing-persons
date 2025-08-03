@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>បញ្ជីឈ្មោះអ្នកបាត់ខ្លួនពីជម្លោះថៃ-កម្ពុជា</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FMXR9MBVZ7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-FMXR9MBVZ7');
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #1a1a1a 100%);
+            color: #d4c5b3;
+            min-height: 100vh;
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            color: #d4af37;
+            font-size: 1.2rem;
+        }
+
+        .loading.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(212, 175, 55, 0.3);
+            border-top: 4px solid #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 3px solid #8b4513;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header h1 {
+            color: #d4af37;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #b89968;
+            font-size: 1.1rem;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .connection-status {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+            color: #86efac;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .connection-status.offline {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #fca5a5;
+        }
+
+        .memorial-quote {
+            background: rgba(139, 69, 19, 0.2);
+            border-left: 4px solid #d4af37;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            font-style: italic;
+            text-align: center;
+            color: #e6d4b7;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            font-size: 1.1rem;
+        }
+
+        .main-stats {
+            background: rgba(139, 34, 34, 0.3);
+            border: 2px solid #dc2626;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 600px;
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+            position: relative;
+        }
+
+        .main-stats h2 {
+            color: #ef4444;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(220, 38, 38, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .main-stats p {
+            color: #fca5a5;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .sync-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 12px;
+            height: 12px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .sync-indicator.syncing {
+            background: #f59e0b;
+        }
+
+        .sync-indicator.offline {
+            background: #ef4444;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .form-section {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 1px solid #8b4513;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-section h2 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #d4c5b3;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #8b4513;
+            border-radius: 5px;
+            color: #d4c5b3;
+            font-size: 1rem;
+            font-family: 'Noto Sans Khmer', sans-serif;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .person-entry {
+            background: rgba(139, 69, 19, 0.1);
+            border: 1px solid #8b4513;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .person-entry h4 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #8b4513;
+            padding-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .person-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans Khmer', sans-serif;
+            position: relative;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b4513, #d4af37);
+            color: white;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(139, 69, 19, 0.6);
+            color: #d4c5b3;
+            border: 1px solid #8b4513;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(139, 69, 19, 0.8);
+        }
+
+        .btn-danger {
+            background: rgba(139, 34, 34, 0.8);
+            color: white;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: rgba(139, 34, 34, 1);
+        }
+
+        .list-section {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #8b4513;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.8rem;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #8b4513;
+            border-radius: 5px;
+            color: #d4c5b3;
+            font-family: 'Noto Sans Khmer', sans-serif;
+        }
+
+        .list-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-select {
+            padding: 0.5rem;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #8b4513;
+            border-radius: 5px;
+            color: #d4c5b3;
+            font-family: 'Noto Sans Khmer', sans-serif;
+        }
+
+        .stats {
+            background: rgba(139, 69, 19, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid #8b4513;
+        }
+
+        .stats h3 {
+            color: #d4af37;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .missing-person-row {
+            background: rgba(139, 69, 19, 0.1);
+            border: 1px solid #8b4513;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .missing-person-row:hover {
+            background: rgba(139, 69, 19, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .person-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #8b4513;
+            flex-shrink: 0;
+        }
+
+        .person-photo.placeholder {
+            background: rgba(139, 69, 19, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b4513;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .person-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .person-name {
+            color: #d4af37;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .person-detail {
+            color: #b89968;
+        }
+
+        .contact-info {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            background: rgba(139, 69, 19, 0.6);
+            border: 1px solid #8b4513;
+            border-radius: 5px;
+            color: #d4c5b3;
+            cursor: pointer;
+            font-family: 'Noto Sans Khmer', sans-serif;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination button.active {
+            background: #d4af37;
+            color: #000;
+        }
+
+        .warning-banner {
+            background: rgba(139, 34, 34, 0.3);
+            border: 1px solid #8b2222;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            color: #ffcccc;
+        }
+
+        .firebase-config {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .firebase-config h3 {
+            color: #60a5fa;
+            margin-bottom: 1rem;
+        }
+
+        .firebase-config p {
+            color: #bfdbfe;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+            color: #86efac;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            border: 2px solid #8b4513;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .person-fields {
+                grid-template-columns: 1fr;
+            }
+            
+            .person-info {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .list-controls {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .search-controls {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        កំពុងភ្ជាប់ទៅ Firebase...
+    </div>
+
+    <div class="header">
+        <h1>បញ្ជីឈ្មោះអ្នកបាត់ខ្លួនពីជម្លោះថៃ-កម្ពុជា</h1>
+        <p>ដើម្បីរំលឹកដល់អ្នកដែលបាត់ខ្លួនពីផលប៉ះពាល់នៃសង្រ្គាម និងអំពើហិង្សា</p>
+        <div class="connection-status" id="connection-status">
+            🟢 បានភ្ជាប់ទៅ Firebase ជោគជ័យ
+        </div>
+    </div>
+
+    <div class="memorial-quote">
+        "ការចងចាំរបស់អ្នកដែលបាត់ខ្លួននឹងនៅតែស្ថិតក្នុងចិត្តយើងជារៀងរហូត<br>
+        ដើម្បីឲ្យពិភពលោកនេះមិនភ្លេចមេរៀនពីអតីតកាលដ៏ឈឺចាប់"
+    </div>
+
+    <div class="main-stats">
+        <div class="sync-indicator" id="sync-indicator"></div>
+        <h2 id="main-total-count">០ នាក់</h2>
+        <p>ចំនួនអ្នកបាត់ខ្លួនសរុប</p>
+    </div>
+
+    <div class="container">
+        <div class="warning-banner">
+            <strong>⚠️ ការព្រមាន:</strong> ព័ត៌មានដែលបញ្ចូលក្នុងប្រព័ន្ធនេះទាក់ទងនឹងព្រឹត្តិការណ៍ប្រវត្តិសាស្ត្រដ៏សំខាន់ សូមបញ្ចូលព័ត៌មានដោយការទទួលខុសត្រូវ និងការគោរពចំពោះអ្នកដែលទទួលរងផលប៉ះពាល់
+        </div>
+
+        <div id="error-container"></div>
+        <div id="success-container"></div>
+
+        <div class="form-section">
+            <h2>បន្ថែមបញ្ជីឈ្មោះអ្នកបាត់ខ្លួន</h2>
+            <div class="form-group">
+                <label for="contributor-name">ឈ្មោះអ្នកផ្តល់ព័ត៌មាន:</label>
+                <input type="text" id="contributor-name" placeholder="សូមបញ្ជាក់ឈ្មោះរបស់អ្នក" required>
+            </div>
+            
+            <div id="person-entries">
+                <div class="person-entry">
+                    <h4>អ្នកបាត់ខ្លួនទី ១</h4>
+                    <div class="person-fields">
+                        <div class="form-group">
+                            <label>ឈ្មោះ-នាមត្រកូល:</label>
+                            <input type="text" name="full-name" placeholder="ឈ្មោះពេញរបស់អ្នកបាត់ខ្លួន" required>
+                        </div>
+                        <div class="form-group">
+                            <label>អាយុ (នៅពេលបាត់ខ្លួន):</label>
+                            <input type="number" name="age" placeholder="អាយុ" min="0" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label>ភេទ:</label>
+                            <select name="gender">
+                                <option value="">-- សូមជ្រើសរើស --</option>
+                                <option value="ប្រុស">ប្រុស</option>
+                                <option value="ស្រី">ស្រី</option>
+                                <option value="មិនបានបញ្ជាក់">មិនបានបញ្ជាក់</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ស្រុក/ខេត្ត:</label>
+                            <input type="text" name="province" placeholder="ស្រុក ឬ ខេត្តកំណើត">
+                        </div>
+                        <div class="form-group">
+                            <label>លេខទូរស័ព្ទទំនាក់ទំនង:</label>
+                            <input type="tel" name="contact-phone" placeholder="លេខទូរស័ព្ទសម្រាប់ទំនាក់ទំនង (ជាជម្រើស)">
+                        </div>
+                        <div class="form-group">
+                            <label>អ៊ីមែលទំនាក់ទំនង:</label>
+                            <input type="email" name="contact-email" placeholder="អាសយដ្ឋានអ៊ីមែល (ជាជម្រើស)">
+                        </div>
+                        <div class="form-group">
+                            <label>រូបភាពអ្នកបាត់ខ្លួន:</label>
+                            <input type="file" name="photo" accept="image/*" style="background: rgba(139, 69, 19, 0.2); border: 1px dashed #8b4513; padding: 1rem;">
+                            <div class="photo-preview"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>ឆ្នាំបាត់ខ្លួន:</label>
+                            <input type="number" name="missing-year" placeholder="ឆ្នាំ" min="1970" max="2025">
+                        </div>
+                        <div class="form-group">
+                            <label>ស្ថានភាពបាត់ខ្លួន:</label>
+                            <select name="status">
+                                <option value="">-- សូមជ្រើសរើស --</option>
+                                <option value="បាត់ខ្លួនក្នុងសង្រ្គាម">បាត់ខ្លួនក្នុងសង្រ្គាម</option>
+                                <option value="ត្រូវបានចាប់ខ្លួន">ត្រូវបានចាប់ខ្លួន</option>
+                                <option value="រត់គេចខ្លួន">រត់គេចខ្លួន</option>
+                                <option value="ស្លាប់ក្នុងការប្រយុទ្ធ">ស្លាប់ក្នុងការប្រយុទ្ធ</option>
+                                <option value="មិនស្គាល់">មិនស្គាល់</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+                <button type="button" class="btn btn-secondary" onclick="addPersonEntry()">បន្ថែមអ្នកបាត់ខ្លួនថ្មី</button>
+                <button type="button" class="btn btn-primary" id="submit-btn" onclick="submitData()">
+                    <span class="btn-text">យល់ព្រមបញ្ជូនព័ត៌មាន</span>
+                    <span class="btn-loading" style="display: none;">កំពុងបញ្ជូន...</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <h2 style="color: #d4af37; text-align: center; margin-bottom: 2rem; font-size: 1.8rem; font-weight: 600;">បញ្ជីអ្នកបាត់ខ្លួនទាំងអស់</h2>
+            
+            <div class="search-controls">
+                <input type="text" id="search-input" class="search-input" placeholder="ស្វែងរកតាមឈ្មោះ ស្រុក ឬ ខេត្ត..." onkeyup="filterResults()">
+                <select id="status-filter" class="pagination-select" onchange="filterResults()">
+                    <option value="">បង្ហាញទាំងអស់</option>
+                    <option value="បាត់ខ្លួនក្នុងសង្រ្គាម">បាត់ខ្លួនក្នុងសង្រ្គាម</option>
+                    <option value="ត្រូវបានចាប់ខ្លួន">ត្រូវបានចាប់ខ្លួន</option>
+                    <option value="រត់គេចខ្លួន">រត់គេចខ្លួន</option>
+                    <option value="ស្លាប់ក្នុងការប្រយុទ្ធ">ស្លាប់ក្នុងការប្រយុទ្ធ</option>
+                    <option value="មិនស្គាល់">មិនស្គាល់</option>
+                </select>
+            </div>
+
+            <div class="stats">
+                <h3 id="total-count">សរុបអ្នកបាត់ខ្លួន: ០ នាក់</h3>
+                <p style="color: #b89968;">បានកត់ត្រាដោយអ្នកដាក់បញ្ជូលព័ត៌មាននានា | ធ្វើបច្ចុប្បន្នភាពដោយស្វ័យប្រវត្តិ</p>
+            </div>
+
+            <div class="list-controls">
+                <div>
+                    <label for="items-per-page" style="color: #d4c5b3; margin-right: 0.5rem;">បង្ហាញក្នុងមួយទំព័រ:</label>
+                    <select id="items-per-page" class="pagination-select" onchange="changeItemsPerPage()">
+                        <option value="50">៥០ នាក់</option>
+                        <option value="100">១០០ នាក់</option>
+                        <option value="500">៥០០ នាក់</option>
+                        <option value="all">បង្ហាញទាំងអស់</option>
+                    </select>
+                </div>
+                <div id="page-info" style="color: #d4c5b3;"></div>
+            </div>
+
+            <div id="missing-persons-list">
+                <p style="text-align: center; color: #b89968; font-size: 1.2rem;">កំពុងទាញយកទិន្នន័យ...</p>
+            </div>
+            
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <footer style="background: rgba(0, 0, 0, 0.8); padding: 2rem; text-align: center; margin-top: 3rem; border-top: 1px solid #8b4513;">
+        <p style="color: #b89968; font-size: 0.9rem; margin-bottom: 1rem;">
+            ប្រព័ន្ធនេះត្រូវបានបង្កើតឡើងដើម្បីរក្សាទុកការចងចាំ និងកិត្តិយសរបស់អ្នកដែលបាត់ខ្លួន
+        </p>
+        <p style="color: #8b4513; font-size: 0.8rem;">
+            "សន្តិភាពគឺជាផលូវតែមួយគត់ដើម្បីកូនខ្មែរមិនបាត់ខ្លួនទៀត"
+        </p>
+        <p style="color: #6b7280; font-size: 0.7rem; margin-top: 1rem;">
+            Powered by Firebase | Real-time Database
+        </p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            onSnapshot, 
+            query, 
+            orderBy, 
+            doc, 
+            updateDoc, 
+            deleteDoc,
+            serverTimestamp 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { 
+            getStorage, 
+            ref, 
+            uploadBytes, 
+            getDownloadURL,
+            deleteObject 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAkOyQ44yxa84MRbzzFNRsMCaIMmowbves",
+            authDomain: "losepeople-1b53b.firebaseapp.com",
+            projectId: "losepeople-1b53b",
+            storageBucket: "losepeople-1b53b.firebasestorage.app",
+            messagingSenderId: "970922831911",
+            appId: "1:970922831911:web:f3460d8c155fa724d95e02",
+            measurementId: "G-G4PB92GPDJ"
+        };
+
+        // Initialize Firebase
+        let app, db, storage;
+        let missingPersons = [];
+        let filteredPersons = [];
+        let currentPage = 1;
+        let itemsPerPage = 50;
+        let personCounter = 1;
+        let isSubmitting = false;
+
+        // Initialize Firebase and setup listeners
+        async function initializeFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                storage = getStorage(app);
+                
+                updateConnectionStatus('online');
+                setupRealtimeListener();
+                hideLoading();
+                showSuccess('Firebase បានភ្ជាប់ជោគជ័យ! ប្រព័ន្ធរួចរាល់ដើម្បីប្រើប្រាស់');
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                updateConnectionStatus('offline');
+                hideLoading();
+                showError('មិនអាចភ្ជាប់ទៅ Firebase បានទេ។ សូមពិនិត្យការកំណត់ firebaseConfig');
+            }
+        }
+
+        // Setup real-time listener for missing persons
+        function setupRealtimeListener() {
+            setSyncStatus('syncing');
+            const q = query(collection(db, 'missingPersons'), orderBy('fullName'));
+            
+            onSnapshot(q, (snapshot) => {
+                missingPersons = [];
+                snapshot.forEach((doc) => {
+                    missingPersons.push({ id: doc.id, ...doc.data() });
+                });
+                
+                filteredPersons = [...missingPersons];
+                updateDisplay();
+                setSyncStatus('online');
+            }, (error) => {
+                console.error('Real-time listener error:', error);
+                setSyncStatus('offline');
+                showError('មានបញ្ហាក្នុងការទាញយកទិន្នន័យ: ' + error.message);
+            });
+        }
+
+        // Upload image to Firebase Storage
+        async function uploadImage(file, personId) {
+            if (!file) return null;
+            
+            const storageRef = ref(storage, `photos/${personId}_${Date.now()}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            return await getDownloadURL(snapshot.ref);
+        }
+
+        // Add person entry to form
+        window.addPersonEntry = function() {
+            const contributorName = document.getElementById('contributor-name').value.trim();
+            if (!contributorName) {
+                showError('សូមបញ្ចូលឈ្មោះអ្នកផ្តល់ព័ត៌មានជាមុនសិន');
+                return;
+            }
+
+            const entriesContainer = document.getElementById('person-entries');
+            const existingEntries = entriesContainer.children.length;
+            
+            if (existingEntries >= 10) {
+                showError('អ្នកអាចបញ្ចូលបានអតិបរមា ១០ នាក់ប៉ុណ្ណោះ');
+                return;
+            }
+
+            personCounter++;
+            const newEntry = document.createElement('div');
+            newEntry.className = 'person-entry';
+            newEntry.innerHTML = `
+                <h4>អ្នកបាត់ខ្លួនទី ${personCounter}</h4>
+                <button type="button" class="btn btn-danger" onclick="removePersonEntry(this)">លុប</button>
+                <div class="person-fields">
+                    <div class="form-group">
+                        <label>ឈ្មោះ-នាមត្រកូល:</label>
+                        <input type="text" name="full-name" placeholder="ឈ្មោះពេញរបស់អ្នកបាត់ខ្លួន" required>
+                    </div>
+                    <div class="form-group">
+                        <label>អាយុ (នៅពេលបាត់ខ្លួន):</label>
+                        <input type="number" name="age" placeholder="អាយុ" min="0" max="120">
+                    </div>
+                    <div class="form-group">
+                        <label>ភេទ:</label>
+                        <select name="gender">
+                            <option value="">-- សូមជ្រើសរើស --</option>
+                            <option value="ប្រុស">ប្រុស</option>
+                            <option value="ស្រី">ស្រី</option>
+                            <option value="មិនបានបញ្ជាក់">មិនបានបញ្ជាក់</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ស្រុក/ខេត្ត:</label>
+                        <input type="text" name="province" placeholder="ស្រុក ឬ ខេត្តកំណើត">
+                    </div>
+                    <div class="form-group">
+                        <label>លេខទូរស័ព្ទទំនាក់ទំនង:</label>
+                        <input type="tel" name="contact-phone" placeholder="លេខទូរស័ព្ទសម្រាប់ទំនាក់ទំនង (ជាជម្រើស)">
+                    </div>
+                    <div class="form-group">
+                        <label>អ៊ីមែលទំនាក់ទំនង:</label>
+                        <input type="email" name="contact-email" placeholder="អាសយដ្ឋានអ៊ីមែល (ជាជម្រើស)">
+                    </div>
+                    <div class="form-group">
+                        <label>រូបភាពអ្នកបាត់ខ្លួន:</label>
+                        <input type="file" name="photo" accept="image/*" style="background: rgba(139, 69, 19, 0.2); border: 1px dashed #8b4513; padding: 1rem;" onchange="previewImage(this)">
+                        <div class="photo-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>ឆ្នាំបាត់ខ្លួន:</label>
+                        <input type="number" name="missing-year" placeholder="ឆ្នាំ" min="1970" max="2025">
+                    </div>
+                    <div class="form-group">
+                        <label>ស្ថានភាពបាត់ខ្លួន:</label>
+                        <select name="status">
+                            <option value="">-- សូមជ្រើសរើស --</option>
+                            <option value="បាត់ខ្លួនក្នុងសង្រ្គាម">បាត់ខ្លួនក្នុងសង្រ្គាម</option>
+                            <option value="ត្រូវបានចាប់ខ្លួន">ត្រូវបានចាប់ខ្លួន</option>
+                            <option value="រត់គេចខ្លួន">រត់គេចខ្លួន</option>
+                            <option value="ស្លាប់ក្នុងការប្រយុទ្ធ">ស្លាប់ក្នុងការប្រយុទ្ធ</option>
+                            <option value="មិនស្គាល់">មិនស្គាល់</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            
+            entriesContainer.appendChild(newEntry);
+        };
+
+        // Remove person entry from form
+        window.removePersonEntry = function(button) {
+            const entry = button.closest('.person-entry');
+            entry.remove();
+            
+            // Renumber remaining entries
+            const entries = document.querySelectorAll('.person-entry h4');
+            entries.forEach((h4, index) => {
+                h4.textContent = `អ្នកបាត់ខ្លួនទី ${index + 1}`;
+            });
+            personCounter = entries.length;
+        };
+
+        // Preview uploaded image
+        window.previewImage = function(input) {
+            const file = input.files[0];
+            const previewContainer = input.parentElement.querySelector('.photo-preview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `<img src="${e.target.result}" class="image-preview" alt="ការមើលរូបភាពជាមុន">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.innerHTML = '';
+            }
+        };
+
+        // Submit data to Firebase
+        window.submitData = async function() {
+            if (isSubmitting) return;
+            
+            const contributorName = document.getElementById('contributor-name').value.trim();
+            if (!contributorName) {
+                showError('សូមបញ្ចូលឈ្មោះអ្នកផ្តល់ព័ត៌មាន');
+                return;
+            }
+
+            const personEntries = document.querySelectorAll('.person-entry');
+            let validEntries = 0;
+
+            for (let entry of personEntries) {
+                const fullName = entry.querySelector('input[name="full-name"]').value.trim();
+                if (fullName) validEntries++;
+            }
+
+            if (validEntries === 0) {
+                showError('សូមបញ្ចូលអោយបានយ៉ាងហោចណាស់អ្នកបាត់ខ្លួនម្នាក់');
+                return;
+            }
+
+            setSubmitting(true);
+            setSyncStatus('syncing');
+
+            try {
+                for (let entry of personEntries) {
+                    const fullName = entry.querySelector('input[name="full-name"]').value.trim();
+                    if (!fullName) continue;
+
+                    const personData = {
+                        contributor: contributorName,
+                        fullName: fullName,
+                        age: entry.querySelector('input[name="age"]').value || 'មិនបានបញ្ជាក់',
+                        gender: entry.querySelector('select[name="gender"]').value || 'មិនបានបញ្ជាក់',
+                        province: entry.querySelector('input[name="province"]').value.trim() || 'មិនបានបញ្ជាក់',
+                        contactPhone: entry.querySelector('input[name="contact-phone"]').value.trim() || '',
+                        contactEmail: entry.querySelector('input[name="contact-email"]').value.trim() || '',
+                        missingYear: entry.querySelector('input[name="missing-year"]').value || 'មិនបានបញ្ជាក់',
+                        status: entry.querySelector('select[name="status"]').value || 'មិនបានបញ្ជាក់',
+                        dateAdded: serverTimestamp(),
+                        photoURL: null
+                    };
+
+                    // Upload photo if exists
+                    const photoFile = entry.querySelector('input[name="photo"]').files[0];
+                    if (photoFile) {
+                        const tempId = Date.now() + Math.random();
+                        personData.photoURL = await uploadImage(photoFile, tempId);
+                    }
+
+                    // Add to Firestore
+                    await addDoc(collection(db, 'missingPersons'), personData);
+                }
+
+                // Clear form
+                clearForm();
+                showSuccess(`បានបន្ថែមព័ត៌មានអ្នកបាត់ខ្លួន ${validEntries} នាក់ ដោយជោគជ័យ`);
+                
+            } catch (error) {
+                console.error('Error adding documents:', error);
+                showError('មានបញ្ហាក្នុងការបញ្ជូនព័ត៌មាន: ' + error.message);
+            } finally {
+                setSubmitting(false);
+                setSyncStatus('online');
+            }
+        };
+
+        // Clear form after submission
+        function clearForm() {
+            document.getElementById('contributor-name').value = '';
+            const entriesContainer = document.getElementById('person-entries');
+            entriesContainer.innerHTML = `
+                <div class="person-entry">
+                    <h4>អ្នកបាត់ខ្លួនទី ១</h4>
+                    <div class="person-fields">
+                        <div class="form-group">
+                            <label>ឈ្មោះ-នាមត្រកូល:</label>
+                            <input type="text" name="full-name" placeholder="ឈ្មោះពេញរបស់អ្នកបាត់ខ្លួន" required>
+                        </div>
+                        <div class="form-group">
+                            <label>អាយុ (នៅពេលបាត់ខ្លួន):</label>
+                            <input type="number" name="age" placeholder="អាយុ" min="0" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label>ភេទ:</label>
+                            <select name="gender">
+                                <option value="">-- សូមជ្រើសរើស --</option>
+                                <option value="ប្រុស">ប្រុស</option>
+                                <option value="ស្រី">ស្រី</option>
+                                <option value="មិនបានបញ្ជាក់">មិនបានបញ្ជាក់</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ស្រុក/ខេត្ត:</label>
+                            <input type="text" name="province" placeholder="ស្រុក ឬ ខេត្តកំណើត">
+                        </div>
+                        <div class="form-group">
+                            <label>លេខទូរស័ព្ទទំនាក់ទំនង:</label>
+                            <input type="tel" name="contact-phone" placeholder="លេខទូរស័ព្ទសម្រាប់ទំនាក់ទំនង (ជាជម្រើស)">
+                        </div>
+                        <div class="form-group">
+                            <label>អ៊ីមែលទំនាក់ទំនង:</label>
+                            <input type="email" name="contact-email" placeholder="អាសយដ្ឋានអ៊ីមែល (ជាជម្រើស)">
+                        </div>
+                        <div class="form-group">
+                            <label>រូបភាពអ្នកបាត់ខ្លួន:</label>
+                            <input type="file" name="photo" accept="image/*" style="background: rgba(139, 69, 19, 0.2); border: 1px dashed #8b4513; padding: 1rem;" onchange="previewImage(this)">
+                            <div class="photo-preview"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>ឆ្នាំបាត់ខ្លួន:</label>
+                            <input type="number" name="missing-year" placeholder="ឆ្នាំ" min="1970" max="2025">
+                        </div>
+                        <div class="form-group">
+                            <label>ស្ថានភាពបាត់ខ្លួន:</label>
+                            <select name="status">
+                                <option value="">-- សូមជ្រើសរើស --</option>
+                                <option value="បាត់ខ្លួនក្នុងសង្រ្គាម">បាត់ខ្លួនក្នុងសង្រ្គាម</option>
+                                <option value="ត្រូវបានចាប់ខ្លួន">ត្រូវបានចាប់ខ្លួន</option>
+                                <option value="រត់គេចខ្លួន">រត់គេចខ្លួន</option>
+                                <option value="ស្លាប់ក្នុងការប្រយុទ្ធ">ស្លាប់ក្នុងការប្រយុទ្ធ</option>
+                                <option value="មិនស្គាល់">មិនស្គាល់</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            personCounter = 1;
+        }
+
+        // Filter search results
+        window.filterResults = function() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+
+            filteredPersons = missingPersons.filter(person => {
+                const matchesSearch = person.fullName.toLowerCase().includes(searchTerm) ||
+                                    person.province.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || person.status === statusFilter;
+                
+                return matchesSearch && matchesStatus;
+            });
+
+            currentPage = 1;
+            displayMissingPersons();
+        };
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('total-count').textContent = `សរុបអ្នកបាត់ខ្លួន: ${missingPersons.length} នាក់`;
+            document.getElementById('main-total-count').textContent = `${missingPersons.length} នាក់`;
+            displayMissingPersons();
+        }
+
+        // Display missing persons list
+        function displayMissingPersons() {
+            const listContainer = document.getElementById('missing-persons-list');
+            const paginationContainer = document.getElementById('pagination');
+            const pageInfo = document.getElementById('page-info');
+            
+            if (filteredPersons.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #b89968; font-size: 1.2rem;">រកមិនឃើញព័ត៌មានដែលស្វែងរក</p>';
+                paginationContainer.innerHTML = '';
+                pageInfo.textContent = '';
+                return;
+            }
+
+            let displayPersons = [...filteredPersons];
+            let totalPages = 1;
+
+            if (itemsPerPage !== 'all') {
+                totalPages = Math.ceil(filteredPersons.length / itemsPerPage);
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                displayPersons = filteredPersons.slice(startIndex, endIndex);
+                
+                pageInfo.textContent = `ទំព័រ ${currentPage} នៃ ${totalPages} (បង្ហាញ ${startIndex + 1}-${Math.min(endIndex, filteredPersons.length)} នៃ ${filteredPersons.length})`;
+            } else {
+                pageInfo.textContent = `បង្ហាញទាំងអស់ ${filteredPersons.length} នាក់`;
+            }
+
+            listContainer.innerHTML = displayPersons.map(person => `
+                <div class="missing-person-row">
+                    ${person.photoURL ? 
+                        `<img src="${person.photoURL}" alt="រូបភាព ${person.fullName}" class="person-photo" loading="lazy">` :
+                        `<div class="person-photo placeholder">គ្មាន<br>រូបភាព</div>`
+                    }
+                    <div class="person-info">
+                        <div class="person-name">${person.fullName}</div>
+                        <div class="person-detail">អាយុ: ${person.age}</div>
+                        <div class="person-detail">${person.province}</div>
+                        <div class="contact-info">
+                            ${person.contactPhone ? `📞 ${person.contactPhone}` : ''}
+                            ${person.contactEmail ? `<br>📧 ${person.contactEmail}` : ''}
+                            ${!person.contactPhone && !person.contactEmail ? 'មិនមានព័ត៌មានទំនាក់ទំនង' : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            updatePagination(totalPages);
+        }
+
+        // Update pagination
+        function updatePagination(totalPages) {
+            const paginationContainer = document.getElementById('pagination');
+            
+            if (itemsPerPage === 'all' || totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+            
+            paginationHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">មុន</button>`;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="active">${i}</button>`;
+                } else if (i <= 3 || i > totalPages - 3 || Math.abs(i - currentPage) <= 2) {
+                    paginationHTML += `<button onclick="changePage(${i})">${i}</button>`;
+                } else if (i === 4 && currentPage > 6) {
+                    paginationHTML += `<span style="color: #d4c5b3;">...</span>`;
+                } else if (i === totalPages - 3 && currentPage < totalPages - 5) {
+                    paginationHTML += `<span style="color: #d4c5b3;">...</span>`;
+                }
+            }
+            
+            paginationHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">បន្ទាប់</button>`;
+            
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        // Change page
+        window.changePage = function(page) {
+            currentPage = page;
+            displayMissingPersons();
+        };
+
+        // Change items per page
+        window.changeItemsPerPage = function() {
+            const select = document.getElementById('items-per-page');
+            itemsPerPage = select.value === 'all' ? 'all' : parseInt(select.value);
+            currentPage = 1;
+            displayMissingPersons();
+        };
+
+        // UI Helper Functions
+        function showError(message) {
+            const container = document.getElementById('error-container');
+            container.innerHTML = `<div class="error-message">${message}</div>`;
+            setTimeout(() => { container.innerHTML = ''; }, 5000);
+        }
+
+        function showSuccess(message) {
+            const container = document.getElementById('success-container');
+            container.innerHTML = `<div class="success-message">${message}</div>`;
+            setTimeout(() => { container.innerHTML = ''; }, 3000);
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
+
+        function updateConnectionStatus(status) {
+            const statusElement = document.getElementById('connection-status');
+            if (status === 'online') {
+                statusElement.textContent = '🟢 បានភ្ជាប់ទៅ Firebase ជោគជ័យ';
+                statusElement.className = 'connection-status';
+            } else {
+                statusElement.textContent = '🔴 បាត់បង់ការតភ្ជាប់ទៅ Firebase';
+                statusElement.className = 'connection-status offline';
+            }
+        }
+
+        function setSyncStatus(status) {
+            const indicator = document.getElementById('sync-indicator');
+            indicator.className = `sync-indicator ${status}`;
+        }
+
+        function setSubmitting(submitting) {
+            isSubmitting = submitting;
+            const btn = document.getElementById('submit-btn');
+            const btnText = btn.querySelector('.btn-text');
+            const btnLoading = btn.querySelector('.btn-loading');
+            
+            if (submitting) {
+                btn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline';
+            } else {
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+
+        // Initialize the application
+        initializeFirebase();
+
+        // Add initial file input preview handler
+        document.querySelector('input[name="photo"]').addEventListener('change', function() {
+            previewImage(this);
+        });
+    </script>
+</body>
+</html>
